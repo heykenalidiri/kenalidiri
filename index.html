@@ -175,7 +175,6 @@ footer{padding:30px 0 50px;color:var(--muted);font-size:13px;text-align:center}
         <div><label for="tgl">Tanggal lahir</label><input type="date" id="tgl"></div>
       </div>
       <div style="margin-bottom:18px"><label for="email">Email</label><input type="email" id="email" placeholder="nama@email.com" autocomplete="email" inputmode="email"><div style="color:var(--muted);font-size:13px;margin-top:6px">Hasil lengkap dalam bentuk PDF akan dikirim ke email ini setelah Langkah 2 selesai.</div></div>
-      <input type="text" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <button class="btn" id="hitung">Hasil</button>
       <div class="msg" id="msg1"></div>
 
@@ -358,7 +357,7 @@ $("kirim").onclick=async function(){
     if(SCRIPT_URL.indexOf("PASTE")===0){throw new Error("belum dikonfigurasi")}
     var b64=await kompres(chosen);
     var r=await fetch(SCRIPT_URL,{method:"POST",body:JSON.stringify({
-      name:state.name,email:state.email,dob:state.dob,photo:b64,hp:$("hp").value
+      name:state.name,email:state.email,dob:state.dob,photo:b64,hp:""
     })});
     var j=await r.json();
     if(!j.ok){throw new Error(j.error||"gagal")}
