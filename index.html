@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Genetic Intelligence Mapping</title>
+<style>
+:root{--bg:#f6f4ef;--card:#ffffff;--ink:#1d2433;--muted:#5d6678;--line:#e1ddd2;--accent:#1f6f6b;--accent2:#c2703d;--accent-ink:#ffffff;--soft:#e7f1ef;
+color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161f;--card:#1a202c;--ink:#eceff5;--muted:#a3adc0;--line:#2b3446;--accent:#4fb8b1;--accent2:#e39a6a;--accent-ink:#0b1412;--soft:#16302e;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12161f;--card:#1a202c;--ink:#eceff5;--muted:#a3adc0;--line:#2b3446;--accent:#4fb8b1;--accent2:#e39a6a;--accent-ink:#0b1412;--soft:#16302e;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+.hero{padding:64px 0 40px;text-align:center}
+.eyebrow{display:inline-block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:var(--soft);padding:6px 14px;border-radius:99px;font-weight:600}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(32px,6vw,52px);line-height:1.12;margin:18px 0 14px;font-weight:700}
+.lead{color:var(--muted);font-size:18px;max-width:600px;margin:0 auto 26px}
+.btn{display:inline-block;border:0;cursor:pointer;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:600;padding:13px 26px;border-radius:12px;text-decoration:none}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+section{padding:36px 0}
+h2{font-family:Georgia,"Times New Roman",serif;font-size:28px;margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 22px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.num{width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;margin-bottom:10px}
+.step h3{margin:0 0 4px;font-size:17px}.step p{margin:0;color:var(--muted);font-size:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:18px}
+label{display:block;font-weight:600;margin:0 0 6px;font-size:14px}
+input[type=text],input[type=date],input[type=email]{width:100%;font:inherit;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+@media(max-width:600px){.row{grid-template-columns:1fr}}
+.result{display:none;margin-top:22px;border-top:1px dashed var(--line);padding-top:22px}
+.calc{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--soft);padding:12px 14px;border-radius:10px;font-size:15px;overflow-x:auto;white-space:nowrap}
+.big{display:flex;gap:18px;align-items:center;margin-top:18px;flex-wrap:wrap}
+.digit{width:84px;height:84px;border-radius:20px;background:var(--accent2);color:#fff;font:700 44px Georgia,serif;display:grid;place-items:center}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:13px;font-weight:600;padding:4px 12px;border-radius:99px;background:var(--soft);color:var(--accent)}
+.name{font-size:20px;font-weight:700}
+.map{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:6px}
+.cell{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;background:var(--bg)}
+.cell b{display:block;font-size:18px;color:var(--accent2)}
+.cell.on{border-color:var(--accent);background:var(--soft)}
+.rcard{margin-top:18px;border:1px solid var(--line);border-left:4px solid var(--accent2);border-radius:12px;padding:16px 18px;background:var(--bg)}
+.rcard h3{margin:0 0 6px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2)}
+.rcard p{margin:0}
+.cta{margin-top:26px;text-align:center;padding:22px;border-radius:16px;background:var(--soft)}
+.cta .q{font-family:Georgia,"Times New Roman",serif;font-size:22px;font-weight:700;margin-bottom:4px}
+.cta p{margin:0 0 14px;color:var(--muted)}
+.prolog{max-width:640px;margin:0 auto;padding:10px 0 30px}
+.story{margin:26px 0 30px;padding:12px 8px 6px;border-radius:18px;background:var(--card);border:1px solid var(--line)}
+.story svg{display:block;width:100%;height:auto;max-width:100%}
+.sample{margin:0 0 22px;text-align:center}
+.sample svg{width:100%;max-width:340px;height:auto;filter:drop-shadow(0 6px 14px rgba(0,0,0,.2))}
+.sample figcaption{color:var(--muted);font-size:14px;margin-top:10px}
+.story text{font-family:"Segoe UI",system-ui,Arial,sans-serif}
+.prolog .ask{font-family:Georgia,"Times New Roman",serif;font-size:clamp(20px,3.6vw,25px);line-height:1.45;margin:0 0 20px;padding-left:18px;border-left:4px solid var(--accent2)}
+.prolog p{margin:0 0 16px;color:var(--muted);font-size:17px}
+.prolog .self{font-family:Georgia,"Times New Roman",serif;font-style:italic;color:var(--ink);font-size:19px;padding:6px 0 6px 18px;border-left:4px solid var(--line)}
+.prolog .turn{color:var(--ink);font-weight:600;font-size:18px}
+.locked{opacity:.45;pointer-events:none}
+ol.guide{padding-left:20px;margin:0 0 18px}ol.guide li{margin-bottom:6px}
+.drop{border:2px dashed var(--line);border-radius:14px;padding:22px;text-align:center;background:var(--bg)}
+.drop img{max-width:100%;max-height:340px;border-radius:10px;margin-top:12px;display:none}
+.msg{margin-top:14px;padding:12px 14px;border-radius:10px;display:none;font-size:15px}
+.msg.ok{display:block;background:var(--soft);color:var(--accent)}
+.msg.err{display:block;background:rgba(194,80,61,.14);color:#b3472f}
+footer{padding:30px 0 50px;color:var(--muted);font-size:13px;text-align:center}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap">
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">Genetic Intelligence Mapping</span>
+    <h1>Kenali pola kecerdasan bawaan Anda</h1>
+    <p class="lead">Mulai dari nama dan tanggal lahir. Dua langkah sederhana untuk memetakan kecenderungan otak Anda.</p>
+    <a class="btn" href="#mulai">Mulai Pemetaan</a>
+  </header>
+
+  <section class="prolog">
+    <span class="eyebrow" style="margin-bottom:18px">Sebelum mulai</span>
+    <p class="ask">Pernahkah kamu bingung dengan cara kamu sendiri berpikir?</p>
+    <p class="ask">Pernahkah kamu tidak tahu bagaimana menghadapi seseorang, dan bingung harus bersikap seperti apa: diam, bicara, atau pura-pura baik-baik saja?</p>
+    <p>Orang lain tampak begitu mudah mengambil keputusan, sementara kamu butuh waktu lama. Orang lain luwes bergaul, sementara kamu merasa canggung dan salah tingkah. Lalu tanpa sadar, kamu mulai menyalahkan diri sendiri.</p>
+    <p class="self">“Kenapa aku begini?”<br>“Kenapa aku tidak bisa seperti mereka?”</p>
+    <p style="margin-top:20px">Padahal bisa jadi, kamu tidak salah. Setiap orang punya cara kerja otak yang berbeda: cara menerima informasi, cara menanggapi orang lain, dan hal yang membuatnya bergerak. Yang sering terjadi bukan kamu yang bermasalah, tetapi kamu belum mengenal cara kerjamu sendiri.</p>
+    <figure class="story" style="margin-left:0;margin-right:0">
+<svg viewBox="0 0 640 285" role="img" aria-label="Ilustrasi kartun: seseorang yang bingung berubah menjadi percaya diri" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<g id="base">
+<rect x="-17" y="200" width="14" height="40" rx="6" fill="#3b4252"/>
+<rect x="3" y="200" width="14" height="40" rx="6" fill="#3b4252"/>
+<ellipse cx="-12" cy="241" rx="12" ry="5" fill="#2a2f3b"/>
+<ellipse cx="12" cy="241" rx="12" ry="5" fill="#2a2f3b"/>
+<rect x="-30" y="138" width="60" height="72" rx="20" style="fill:var(--shirt)"/>
+<rect x="-6" y="124" width="12" height="18" fill="#e8b78e"/>
+<circle cx="0" cy="98" r="34" fill="#f2c9a5"/>
+<path d="M-35 96 C-38 56 38 56 35 96 C26 78 -26 78 -35 96Z" fill="#3a2a22"/>
+<circle cx="-12" cy="100" r="3" fill="#2a2a2a"/>
+<circle cx="12" cy="100" r="3" fill="#2a2a2a"/>
+</g>
+<path id="spark" d="M0 -10 L3 -3 L10 0 L3 3 L0 10 L-3 3 L-10 0 L-3 -3Z"/>
+</defs>
+
+<!-- orang bingung -->
+<g transform="translate(130,0)" style="--shirt:#8a97ad">
+<ellipse cx="0" cy="244" rx="60" ry="8" fill="#000" opacity=".08"/>
+<path d="M28 152 L36 196" stroke-width="12" stroke-linecap="round" fill="none" style="stroke:var(--shirt)"/>
+<circle cx="36" cy="201" r="7" fill="#f2c9a5"/>
+<use href="#base"/>
+<path d="M-19 91 L-7 86 M7 86 L19 91" stroke="#3a2a22" stroke-width="3" stroke-linecap="round"/>
+<path d="M-10 116 q5 -5 10 0 t10 0" stroke="#8a4b3a" stroke-width="3" stroke-linecap="round" fill="none"/>
+<path d="M-28 152 C-60 142 -56 112 -32 102" stroke-width="12" stroke-linecap="round" fill="none" style="stroke:var(--shirt)"/>
+<circle cx="-32" cy="100" r="7" fill="#f2c9a5"/>
+<path d="M40 72 q-8 11 0 15 q8 -4 0 -15z" fill="#7fb6e6"/>
+<text x="-62" y="62" font-size="30" font-weight="700" style="fill:var(--muted)">?</text>
+<text x="46" y="46" font-size="24" font-weight="700" style="fill:var(--muted)">?</text>
+<text x="-14" y="34" font-size="20" font-weight="700" style="fill:var(--muted)">?</text>
+</g>
+
+<!-- panah transformasi -->
+<path d="M248 150 H368" stroke="#c2703d" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 11"/>
+<polygon points="368,138 392,150 368,162" fill="#c2703d"/>
+<text x="320" y="126" font-size="15" font-weight="600" text-anchor="middle" style="fill:var(--accent)">mengenal diri</text>
+
+<!-- orang percaya diri -->
+<g transform="translate(510,0)" style="--shirt:#1f6f6b">
+<circle cx="0" cy="150" r="108" style="fill:var(--soft)" opacity=".7"/>
+<ellipse cx="0" cy="244" rx="60" ry="8" fill="#000" opacity=".08"/>
+<path d="M28 150 C56 140 62 115 58 94" stroke-width="12" stroke-linecap="round" fill="none" style="stroke:var(--shirt)"/>
+<circle cx="58" cy="90" r="7" fill="#f2c9a5"/>
+<use href="#base"/>
+<path d="M-28 150 C-56 140 -62 115 -58 94" stroke-width="12" stroke-linecap="round" fill="none" style="stroke:var(--shirt)"/>
+<circle cx="-58" cy="90" r="7" fill="#f2c9a5"/>
+<path d="M-19 88 L-6 87 M6 87 L19 88" stroke="#3a2a22" stroke-width="3" stroke-linecap="round"/>
+<path d="M-13 110 Q0 129 13 110 Z" fill="#fff" stroke="#8a4b3a" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="-22" cy="109" r="5" fill="#f4a6a0" opacity=".6"/>
+<circle cx="22" cy="109" r="5" fill="#f4a6a0" opacity=".6"/>
+<use href="#spark" transform="translate(-84,56)" fill="#c2703d"/>
+<use href="#spark" transform="translate(84,50) scale(1.2)" fill="#c2703d"/>
+<use href="#spark" transform="translate(40,22) scale(.8)" fill="#c2703d"/>
+<use href="#spark" transform="translate(-46,24) scale(.7)" fill="#c2703d"/>
+</g>
+
+<text x="130" y="274" font-size="15" text-anchor="middle" style="fill:var(--muted)">Bingung &amp; menyalahkan diri</text>
+<text x="510" y="274" font-size="15" font-weight="600" text-anchor="middle" style="fill:var(--accent)">Kenal diri &amp; percaya diri</text>
+</svg>
+</figure>
+
+    <p>Sulit memahami orang lain, bahkan diri sendiri, kalau kita belum tahu “mesin” apa yang sedang bekerja di dalam kepala.</p>
+    <p class="turn">Genetic Intelligence Mapping membantumu mengenalinya. Mulai dari hal paling sederhana: namamu dan tanggal lahirmu.</p>
+  </section>
+
+  <section>
+    <h2>Cara kerjanya</h2>
+    <p class="sub">Tiga langkah, kurang dari lima menit.</p>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h3>Isi data diri</h3><p>Masukkan nama atau panggilan dan tanggal lahir.</p></div>
+      <div class="step"><div class="num">2</div><h3>Tulis tangan</h3><p>Di selembar kertas putih, tulis 5 baris tentang diri Anda dan bubuhkan tanda tangan.</p></div>
+      <div class="step"><div class="num">3</div><h3>Foto &amp; kirim</h3><p>Foto kertas tersebut, pilih filenya lewat tombol Browse, lalu kirim.</p></div>
+    </div>
+  </section>
+
+  <section id="mulai">
+    <h2>Langkah 1: Data diri</h2>
+    
+    
+    <div class="card">
+      <div class="row">
+        <div><label for="nama">Nama lengkap / panggilan</label><input type="text" id="nama" placeholder="Tidak harus sesuai identitas" autocomplete="name"></div>
+        <div><label for="tgl">Tanggal lahir</label><input type="date" id="tgl"></div>
+      </div>
+      <div style="margin-bottom:18px"><label for="email">Email</label><input type="email" id="email" placeholder="nama@email.com" autocomplete="email" inputmode="email"><div style="color:var(--muted);font-size:13px;margin-top:6px">Hasil lengkap dalam bentuk PDF akan dikirim ke email ini setelah Langkah 2 selesai.</div></div>
+      <input type="text" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+      <button class="btn" id="hitung">Hasil</button>
+      <div class="msg" id="msg1"></div>
+
+      <div class="result" id="result">
+        
+        
+        <div class="big">
+          
+          <div>
+            <div class="name" id="area"></div>
+            <div class="tags" id="tags"></div>
+            <div style="color:var(--muted);font-size:14px;margin-top:6px" id="who"></div>
+          </div>
+        </div>
+        <div class="rcard"><h3>Kecerdasan Dominanmu</h3><p id="rdom"></p></div>
+        <div class="rcard"><h3>Karakter &amp; Kekuatan Utamamu</h3><p id="rchar"></p></div>
+        
+        <div class="cta"><div class="q">Wah, benar kan hasilnya?</div><p>Itu baru gambaran awal tentang dirimu. Yuk, lanjut ke tahap kedua biar hasilnya lengkap. Cuma butuh beberapa menit, dan kamu akan kenal dirimu lebih dalam.</p><button class="btn" id="lanjut" type="button">Ya, lanjut ke tahap kedua</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="langkah2">
+    <h2>Langkah 2: Tulisan tangan &amp; tanda tangan</h2>
+    <p class="sub">Terbuka setelah Anda memilih hasil lengkap.</p>
+    <div class="card locked" id="card2">
+      <ol class="guide">
+        <li>Siapkan selembar kertas putih polos dan pulpen.</li>
+        <li>Tulis 5 baris tentang diri Anda, misalnya nama dan hobi.</li>
+        <li>Bubuhkan tanda tangan Anda di bawah tulisan.</li>
+        <li>Foto kertas dengan cahaya cukup, seluruh tulisan terlihat jelas dan tidak buram.</li>
+      </ol>
+      <figure class="sample" style="margin-left:0;margin-right:0">
+<svg viewBox="0 0 360 304" role="img" aria-label="Contoh selembar kertas putih berisi tulisan tangan dan tanda tangan" xmlns="http://www.w3.org/2000/svg">
+<g transform="rotate(-1.5 180 152)">
+<rect x="18" y="12" width="324" height="280" rx="4" fill="#ffffff" stroke="#e4e1d8"/>
+<g font-family="Caveat,'Segoe Script','Bradley Hand','Comic Sans MS',cursive" font-size="25" font-weight="500" fill="#1b2a78">
+<text x="42" y="58">Halo, nama saya Nanda</text>
+<text x="42" y="94">Hobi saya menggambar</text>
+<text x="42" y="130">Saya juga suka membaca novel</text>
+<text x="42" y="166">dan jalan sore bersama teman</text>
+<text x="42" y="202">Cita-cita saya jadi desainer</text>
+</g>
+<g fill="none" stroke="#1b2a78" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M196 262 C208 226 224 222 220 254 C218 270 238 232 252 240 C264 246 250 266 270 250 C284 240 292 250 306 244"/>
+<path d="M190 272 C232 280 286 272 318 266"/>
+</g>
+</g>
+</svg>
+<figcaption>Contoh: nama, hobi, dan tanda tangan di selembar kertas putih</figcaption>
+</figure>
+      <div class="drop">
+        <input type="file" id="file" accept="image/*" hidden>
+        <button class="btn ghost" id="browse" type="button">Browse file / ambil foto</button>
+        <div id="fname" style="color:var(--muted);font-size:14px;margin-top:8px">Belum ada file dipilih</div>
+        <img id="prev" alt="Pratinjau foto kertas">
+      </div>
+      <div style="margin-top:16px"><button class="btn" id="kirim" disabled>Kirim</button></div>
+      <div class="msg" id="msg2"></div>
+    </div>
+  </section>
+
+  <footer>Genetic Intelligence Mapping &middot; Hasil pemetaan bersifat informatif dan bukan diagnosis medis atau psikologis.</footer>
+</div>
+
+<script>
+var TYPES = {
+  1:{area:"Neokorteks Kiri",ori:"Introvert"},
+  2:{area:"Limbik Kanan",ori:"Ekstrovert"},
+  3:{area:"Limbik Kiri",ori:"Ekstrovert"},
+  4:{area:"Limbik Kiri",ori:"Introvert"},
+  5:{area:"Limbik Kanan",ori:"Introvert"},
+  6:{area:"Neokorteks Kanan",ori:"Ekstrovert"},
+  7:{area:"Neokorteks Kanan",ori:"Introvert"},
+  8:{area:"Neokorteks Kiri",ori:"Ekstrovert"},
+  9:{area:"Otak Tengah",ori:""}
+};
+var DATA = {
+1:["Sang Pemula","Penggerak","Kamu memiliki tipe kecerdasan Neokorteks Kiri, yang berarti kemampuan pada logika, sehingga kamu rasional & objektif.","Kamu membawa energi keberanian dan kepemimpinan, ambisius dan berorientasi pada hasil, tahu arah tujuan yang jelas dan yakin pada arah yang dituju, sehingga kamu sanggup menekuni profesi yang spesifik."],
+2:["Sang Pendukung","Juru Damai","Kamu memiliki tipe kecerdasan Limbik Kanan, yang berarti kemampuan dominanmu ada pada perasaan, sehingga kamu pandai memahami orang lain.","Kamu memiliki unsur kelembutan, kerja sama, diplomasi dan strategi untuk mendukung atau mendamaikan. Kamu juga pandai menasihati, lembut, penyayang, dan menyukai musik serta seni, sehingga kamu hebat dalam persahabatan dan hubungan sosial."],
+3:["Sang Pelaksana","Cermat","Kamu memiliki tipe kecerdasan Limbik Kiri, yang berarti kemampuan dominanmu ada pada kelima panca indera, sehingga kamu selalu konkret dan praktis.","Kamu tajam dalam mengamati detail, cermat, menyukai keteraturan, sistematika, metode dan ketepatan. Kamu membawa energi yang bisa diandalkan, tepat dan mandiri. Kamu cenderung mengatakan apa yang dilakukan dan melakukan apa yang dikatakan: jujur, bisa dipercaya dan apa adanya. Kepribadian ini menjadi pondasi dan pijakan, sehingga kamu mudah kecipratan banyak peluang baru."],
+4:["Sang Inspirator","Ekspresif","Kamu memiliki tipe kecerdasan Limbik Kiri, yang berarti kemampuan dominanmu ada pada kelima panca indera, sehingga kamu selalu konkret dan praktis.","Kamu suka berkelana, pandai meniru dan hebat dalam berakting, dengan karakter utama yang sangat terlihat dari caramu mengekspresikan diri dan berkomunikasi. Kamu juga membawa semangat positif, optimisme dan antusiasme, serta menikmati hidup dengan santai."],
+5:["Sang Petualang","Fleksibel","Kamu memiliki tipe kecerdasan Limbik Kanan, yang berarti kemampuan dominanmu ada pada perasaan, sehingga kamu pandai memahami orang lain.","Kamu memiliki energi persuasif layaknya promotor dan sales, lincah beradaptasi, suka mencoba dan menjelajahi hal baru, dan yang paling signifikan, menyukai kebebasan, sehingga kamu memancarkan pengaruh kuat dalam memimpin."],
+6:["Sang Pengasuh","Penyayang","Kamu memiliki tipe kecerdasan Neokorteks Kanan, yang berarti kemampuan pada indra keenam, yaitu kemampuan menerima informasi atau merasakan sesuatu tanpa menggunakan kelima indra fisik, melainkan dengan pikiran, sekaligus menjadi otak kreatifmu. Beberapa ciri indra keenam yang kamu miliki: kepekaan yang lebih tinggi terhadap keadaan emosional orang lain, mampu merasakan getaran atau energi di sekitar, dan insting yang kuat saat mengambil keputusan.","Kamu pandai memprediksi kecenderungan bisnis ke depan dan mampu berjalan beriringan secara harmonis dengan berbagai pihak. Kepribadian ini berkomitmen, peduli, simpatik, melindungi, mengasuh dan bertanggung jawab, sehingga kamu membawa karakter guru dan penyembuh. Kamu sangat terhubung dengan keluarga dan orang dekat yang kamu pedulikan."],
+7:["Sang Filsuf","Pemikir","Kamu memiliki tipe kecerdasan Neokorteks Kanan, yang berarti kemampuan pada indra keenam, yaitu kemampuan menerima informasi atau merasakan sesuatu tanpa menggunakan kelima indra fisik, melainkan dengan pikiran, sekaligus menjadi otak kreatifmu. Beberapa ciri indra keenam yang kamu miliki: kepekaan yang lebih tinggi terhadap keadaan emosional orang lain, mampu merasakan getaran atau energi di sekitar, dan insting yang kuat saat mengambil keputusan.","Kamu paling spiritual dari semua tipe kecerdasan lainnya. Kamu suka berpikir, mencari kebenaran, analitis, fokus, kontemplatif dan meditatif, suka belajar, mengumpulkan kebijaksanaan dan pengetahuan, serta melambangkan energi seorang pemikir intelektual-abstrak, sehingga kamu cenderung menjadi trendsetter di lingkungan profesimu."],
+8:["Sang Penggerak","Manajerial","Kamu memiliki tipe kecerdasan Neokorteks Kiri, yang berarti kemampuan pada logika, sehingga kamu rasional & objektif.","Kamu paling berorientasi pada hasil, dengan keseimbangan dunia material dan spiritual, penuh kekuatan, ambisi dan orientasi pada harta, namun juga royal. Kamu memahami uang sebagai alat, melambangkan sikap pemimpin dan pebisnis yang memiliki mimpi dan rencana besar, mampu melihat peluang di balik hal yang tidak disadari orang lain, sehingga kamu mahir menjadi komandan dalam sebuah organisasi."],
+9:["Sang Humanis","Peduli","Kamu memiliki tipe kecerdasan Otak Tengah, yang berarti kemampuan pada naluri sebagai indera ketujuh, dilengkapi dengan kemampuan serba bisa. Indera ketujuh berupa insting / naluri ini membantumu mengambil keputusan dalam kehidupan sehari-hari.","Kamu berusaha terus berkorban tanpa berharap imbalan, memiliki sifat memberi, peduli, mencintai dan mengurus siapa pun secara universal, memiliki keahlian serba bisa, berjiwa seni, dan mampu menyatukan berbagai warna dan materi."]
+};
+var $ = function(id){return document.getElementById(id)};
+var state = {name:"",num:0,dob:""};
+var chosen = null;
+
+function sumDigits(n){return String(n).split("").reduce(function(a,c){return a+Number(c)},0)}
+function pad(n){return String(n).padStart(2,"0")}
+
+(function buildMap(){
+  var h="";
+  for(var i=1;i<=9;i++){
+    var t=TYPES[i];
+    h+='<div class="cell" id="c'+i+'"><b>'+i+'</b>'+t.area+(t.ori?'<br>'+t.ori:'')+'</div>';
+  }
+
+})();
+
+function showMsg(el,cls,text){el.className="msg "+cls;el.textContent=text}
+
+$("hitung").onclick=function(){
+  var nama=$("nama").value.trim(), tgl=$("tgl").value;
+  if(nama.length<2){showMsg($("msg1"),"err","Mohon isi nama atau panggilan Anda.");return}
+  if(!tgl){showMsg($("msg1"),"err","Mohon pilih tanggal lahir Anda.");return}
+  var email=$("email").value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){showMsg($("msg1"),"err","Mohon isi email yang valid. Hasil lengkap akan dikirim ke sana.");return}
+  $("msg1").className="msg";
+  var p=tgl.split("-"), y=p[0], m=Number(p[1]), d=Number(p[2]);
+  var y1=Number(y.slice(0,2)), y2=Number(y.slice(2));
+  var total=d+m+y1+y2;
+  var steps=pad(d)+" + "+pad(m)+" + "+pad(y1)+" + "+pad(y2)+" = "+total;
+  var cur=total;
+  while(cur>9){
+    var parts=String(cur).split("").join(" + ");
+    var next=sumDigits(cur);
+    steps+="  \u2192  "+parts+" = "+next;
+    cur=next;
+  }
+  if(total===cur){steps+="  (sudah satu digit)"}
+  state={name:nama,email:email,num:cur,dob:tgl,calc:steps};
+  var t=TYPES[cur];
+
+
+  $("area").textContent="Waaahh, kamu "+nama.replace(/\b[a-z]/g,function(c){return c.toUpperCase()})+", "+DATA[cur][0]+"!";
+  $("tags").innerHTML="";
+  var dd=DATA[cur];
+  $("who").textContent="";
+  $("rdom").textContent=dd[2].replace(/^Kamu memiliki tipe kecerdasan [^,]+, yang berarti (\w)/,function(m,c){return c.toUpperCase()});
+  $("rchar").textContent=dd[3];
+
+  $("result").style.display="block";
+  $("result").scrollIntoView({behavior:"smooth",block:"nearest"});
+};
+
+$("lanjut").onclick=function(){
+  $("card2").classList.remove("locked");
+  $("langkah2").scrollIntoView({behavior:"smooth",block:"start"});
+};
+$("browse").onclick=function(){$("file").click()};
+$("file").onchange=function(){
+  var f=this.files&&this.files[0];
+  if(!f){return}
+  if(f.type.indexOf("image/")!==0){showMsg($("msg2"),"err","File harus berupa gambar (foto).");return}
+  if(f.size>20*1024*1024){showMsg($("msg2"),"err","Ukuran foto maksimal 20 MB.");return}
+  chosen=f;
+  $("fname").textContent=f.name+" ("+Math.round(f.size/1024)+" KB)";
+  var img=$("prev");img.src=URL.createObjectURL(f);img.style.display="block";
+  $("kirim").disabled=false;
+  $("msg2").className="msg";
+};
+
+var SCRIPT_URL="https://script.google.com/macros/s/AKfycbwSKIxSH4RVs-3vPt0IafsM459DaB4x5AZfWLz3_jh1ORvRz1F6MgL1jmjZntH1toF_/exec";
+
+function kompres(file){
+  return new Promise(function(res,rej){
+    var img=new Image(),u=URL.createObjectURL(file);
+    img.onload=function(){
+      var s=Math.min(1,1600/Math.max(img.width,img.height));
+      var c=document.createElement("canvas");
+      c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(u);
+      res(c.toDataURL("image/jpeg",0.82).split(",")[1]);
+    };
+    img.onerror=function(){rej(new Error("foto"))};
+    img.src=u;
+  });
+}
+
+$("kirim").onclick=async function(){
+  if(!chosen||!state.num){return}
+  var btn=this;btn.disabled=true;btn.textContent="Mengirim...";
+  try{
+    if(SCRIPT_URL.indexOf("PASTE")===0){throw new Error("belum dikonfigurasi")}
+    var b64=await kompres(chosen);
+    var r=await fetch(SCRIPT_URL,{method:"POST",body:JSON.stringify({
+      name:state.name,email:state.email,dob:state.dob,photo:b64,hp:$("hp").value
+    })});
+    var j=await r.json();
+    if(!j.ok){throw new Error(j.error||"gagal")}
+    showMsg($("msg2"),"ok","Terima kasih, "+state.name+". Foto Anda sudah terkirim. Hasil lengkap (PDF) sedang dikirim ke "+state.email+". Cek juga folder Spam atau Promosi.");
+    btn.textContent="Terkirim";
+  }catch(e){
+    showMsg($("msg2"),"err",(e&&e.message&&e.message!=="Failed to fetch"&&e.message!=="belum dikonfigurasi"?e.message+" ":"")+"Pengiriman gagal. Silakan coba lagi sebentar lagi.");
+    btn.disabled=false;btn.textContent="Kirim";
+  }
+};
+</script>
+</body>
+</html>
